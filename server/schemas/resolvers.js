@@ -25,10 +25,8 @@ const resolvers = {
 
 			return { token, user };
 		},
-		login: async (parent, { username, email, password }) => {
-			const user = await User.findOne({
-				$or: [{ username: username }, { email: email }],
-			});
+		login: async (parent, { email, password }) => {
+			const user = await User.findOne({ email: email });
 
 			if (!user) {
 				throw new AuthenticationError('Incorrect credentials');

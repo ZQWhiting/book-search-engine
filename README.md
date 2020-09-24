@@ -3,6 +3,7 @@
 <a name='description'></a>
 ## Description
 Book Search Engine lets you look up books from the Google Books API and save them for future reference. It is a GraphQL API built with Apollo Server, with a React front end, a MongoDB database, and a Node.js/Express.js server and API. It was adapted from a RESTful API provided by the University of Utah Online Coding Bootcamp.
+
 ![application](./docs/readme-img.jpg)
 
 ## Table of Contents

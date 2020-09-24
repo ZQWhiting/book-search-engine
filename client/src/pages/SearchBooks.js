@@ -43,12 +43,13 @@ const SearchBooks = () => {
       const { items } = await response.json();
 
       const bookData = items.map((book) => ({
-        bookId: book.id,
-        authors: book.volumeInfo.authors || ['No author to display'],
-        title: book.volumeInfo.title,
-        description: book.volumeInfo.description,
-        image: book.volumeInfo.imageLinks?.thumbnail || '',
-      }));
+			  bookId: book.id,
+			  authors: book.volumeInfo.authors || ['No author to display'],
+			  title: book.volumeInfo.title,
+			  description: book.volumeInfo.description,
+			  image: book.volumeInfo.imageLinks?.thumbnail || '',
+			  link: book.volumeInfo.infoLink || '',
+		  }));
 
       setSearchedBooks(bookData);
       setSearchInput('');
@@ -111,11 +112,15 @@ const SearchBooks = () => {
           {searchedBooks.map((book) => {
             return (
               <Card key={book.bookId} border='dark'>
-                {book.image ? (
-                  <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' />
-                ) : null}
+                <a href={book.link} target='_blank' rel="noopener noreferrer">
+                  {book.image ? (
+                    <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' />
+                  ) : null}
+                </a>
                 <Card.Body>
-                  <Card.Title>{book.title}</Card.Title>
+                  <a href={book.link} target='_blank' rel="noopener noreferrer">
+                    <Card.Title>{book.title}</Card.Title>
+                  </a>
                   <p className='small'>Authors: {book.authors}</p>
                   <Card.Text>{book.description}</Card.Text>
                   {Auth.loggedIn() && (

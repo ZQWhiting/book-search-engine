@@ -1,25 +1,36 @@
-import React, { useState } from 'react';
-import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
+import React from 'react';
+import {
+	Jumbotron,
+	Container,
+	CardColumns,
+	Card,
+	Button,
+} from 'react-bootstrap';
+
+import { Redirect } from 'react-router-dom';
 
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import { GET_ME } from '../utils/queries';
 import { REMOVE_BOOK } from '../utils/mutations';
 
-import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
-  const {  loading, data  } = useQuery(GET_ME);
-  const userData = data?.me || {}
+	const { loading, data, error } = useQuery(GET_ME);
+	const [deleteBook] = useMutation(REMOVE_BOOK);
+	const userData = data?.me || {};
 
-  const [deleteBook] = useMutation(REMOVE_BOOK)
+	if (error) {
+		alert(error.message);
+		return <Redirect to='/' />;
+	}
 
 	// create function that accepts the book's mongo _id value as param and deletes the book from the database
 	const handleDeleteBook = async (bookId) => {
 		try {
-      await deleteBook({
-        variables: {bookId}
-      });
+			await deleteBook({
+				variables: { bookId },
+			});
 
 			// remove book's id from localStorage
 			removeBookId(bookId);
@@ -54,15 +65,19 @@ const SavedBooks = () => {
 					{userData.savedBooks.map((book) => {
 						return (
 							<Card key={book.bookId} border='dark'>
-								{book.image ? (
-									<Card.Img
-										src={book.image}
-										alt={`The cover for ${book.title}`}
-										variant='top'
-									/>
-								) : null}
+								<a href={book.link} target='_blank' rel="noopener noreferrer">
+									{book.image ? (
+										<Card.Img
+											src={book.image}
+											alt={`The cover for ${book.title}`}
+											variant='top'
+										/>
+									) : null}
+								</a>
 								<Card.Body>
-									<Card.Title>{book.title}</Card.Title>
+									<a href={book.link} target='_blank' rel="noopener noreferrer">
+										<Card.Title>{book.title}</Card.Title>
+									</a>
 									<p className='small'>
 										Authors: {book.authors}
 									</p>
